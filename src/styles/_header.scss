@@ -1,0 +1,56 @@
+.header {
+    height: $header-height;
+    text-align: right;
+    background-color: #1E1E1E;
+    border-bottom: 1px solid gray;
+
+    .brand-logo {
+        float: left;
+        height: $header-height;
+        padding: 15px;
+        font-size: 20px;
+        font-weight: 100;
+
+        &:hover {
+            color: initial;
+        }
+
+        Link {
+            text-decoration: none !important;
+        }
+
+        span {
+            color: white;
+            margin-left: 10px;
+            font-family: 'Montserrat', Helvetica;
+            display:inline-block;
+            vertical-align: 3px;
+        }
+
+        a {
+            i {
+                color: #d9534f;
+                font-size: 35px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : $tablet) {
+    .header {
+        height: 60px;
+
+        .brand-logo {
+            height: 60px;
+            font-size: 18px;
+        }
+    }
+}
+
+@media only screen and (max-width : $x-small) {
+    .header {
+        .brand-logo {
+            font-size: 0;
+        }
+    }
+}
