@@ -59,6 +59,22 @@ body, html {
     min-width: auto;
 }
 
+.margin-top-half {
+    margin-top: 5px;
+}
+
+.margin-right-half {
+    margin-right: 5px;
+}
+
+.margin-bottom-half {
+    margin-bottom: 5px;
+}
+
+.margin-left-half {
+    margin-left: 5px;
+}
+
 .margin-top {
     margin-top: 10px;
 }
@@ -73,6 +89,26 @@ body, html {
 
 .margin-left {
     margin-left: 10px;
+}
+
+.margin-top-double {
+    margin-top: 20px;
+}
+
+.margin-right-double {
+    margin-right: 20px;
+}
+
+.margin-bottom-double {
+    margin-bottom: 20px;
+}
+
+.margin-left-double {
+    margin-left: 20px;
+}
+
+.inline {
+    display: inline-block;
 }
 
 @media only screen and (max-width : $mobile) {

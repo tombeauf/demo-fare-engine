@@ -7,35 +7,30 @@ const addTapError = err => ({ type: types.TAP_ERROR, err });
 const addTapReceive = balance => ({ type: types.TAP_RECEIVE, balance });
 const addTapIsRequesting = () => ({ type: types.TAP_REQUEST });
 
-const addTap = (payload) => {
+const addTap = (tapData) => {
     return (dispatch) => {
         dispatch(addTapIsRequesting());
 
-        axios.get(`${baseUrl}/api/tap`).then((response) => {
-            dispatch(addTapReceive(response.data.data));
+        const payload = {
+            taps: tapData,
+        };
+
+        axios.post(`${baseUrl}/api/taps`, payload).then((response) => {
+            const { balances } = response.data;
+
+            if (!balances || !balances[0] || !balances[0].deviceId) {
+                console.log(response);
+                dispatch(addTapError('error'));
+            } else {
+                dispatch(addTapReceive(balances));
+            }
         }).catch((e) => {
+            console.log('made it', e);
             dispatch(addTapError(e.message));
-        });
-    };
-};
-
-const deleteTapsError = err => ({ type: types.DELETE_TAPS_ERROR, err });
-const deleteTapsReceive = () => ({ type: types.DELETE_TAPS_RECEIVE });
-const deleteTapsIsRequesting = () => ({ type: types.DELETE_TAPS_REQUEST });
-
-const deleteTaps = () => {
-    return (dispatch) => {
-        dispatch(deleteTapsIsRequesting());
-
-        axios.delete(`${baseUrl}/api/delete-taps`).then(() => {
-            dispatch(deleteTapsReceive());
-        }).catch((e) => {
-            dispatch(deleteTapsError(e.message));
         });
     };
 };
 
 module.exports = {
     addTap,
-    deleteTaps,
 };

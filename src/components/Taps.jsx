@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addNotification as notify } from 'reapop';
 
-import { addTap, deleteTaps } from '../actions/taps';
+import { addTap } from '../actions/taps';
 import { notifySuccess, notifyError } from '../helpers/notifications';
 
 import PureComponent from './PureComponent';
-import CodeBlock from './CodeBlock';
 
 export class Taps extends PureComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        balance: PropTypes.string.isRequired,
+        balance: React.PropTypes.arrayOf(React.PropTypes.shape({
+            deviceId: React.PropTypes.string,
+            amount: React.PropTypes.number,
+        })).isRequired,
         tapIsRequesting: PropTypes.bool.isRequired,
         tapError: PropTypes.string,
-        deleteIsRequesting: PropTypes.bool.isRequired,
-        deleteError: PropTypes.string,
     }
 
     static defaultProps = {
@@ -26,24 +26,16 @@ export class Taps extends PureComponent {
 
     state = {
         deviceId: 'TEST_DEVICE',
+        tapData: '',
     }
 
     componentWillReceiveProps(newProps) {
         if (!this.props.tapError && newProps.tapError) {
-            this.props.dispatch(notify(notifyError('Error adding your tap')));
+            this.props.dispatch(notify(notifyError(newProps.tapError)));
         }
 
         if (this.props.tapIsRequesting && !newProps.tapIsRequesting && !newProps.tapError) {
-            this.props.dispatch(notify(notifySuccess('Tap added successfully')));
-        }
-
-        if (!this.props.deleteError && newProps.deleteError) {
-            console.log(newProps.tapError);
-            this.props.dispatch(notify(notifyError('Error deleting your taps')));
-        }
-
-        if (this.props.deleteIsRequesting && !newProps.deleteIsRequesting && !newProps.deleteError) {
-            this.props.dispatch(notify(notifySuccess('Taps deleted successfully')));
+            this.props.dispatch(notify(notifySuccess('Taps added successfully')));
         }
     }
 
@@ -52,20 +44,55 @@ export class Taps extends PureComponent {
     }
 
     addTap = (e) => {
+        let jsonTapData = '';
         e.preventDefault();
 
-        this.props.dispatch(addTap());
+        if (!this.state.tapData) {
+            this.props.dispatch(notify(notifyError('Please input some taps')));
+            return;
+        }
+
+        try {
+            jsonTapData = JSON.parse(this.state.tapData);
+        } catch (err) {
+            this.props.dispatch(notify(notifyError(err.message)));
+            return;
+        }
+
+        if (!jsonTapData || (jsonTapData && !jsonTapData.length)) {
+            this.props.dispatch(notify(notifyError('Please input an array of taps')));
+            return;
+        }
+
+        this.props.dispatch(addTap(jsonTapData));
     }
 
-    deleteTaps = (e) => {
-        e.preventDefault();
+    renderBalances = () => {
+        return this.props.balance.map((balance) => {
+            const { deviceId, amount } = balance;
 
-        this.props.dispatch(deleteTaps());
+            return (
+                <div key={`${deviceId}-${amount}`}className="margin-top balance-block">
+                    <div className="inline margin-right">
+                        <strong>
+                            <span className="margin-right-half"><i className="fa fa-credit-card" /></span>
+                            <span>Device</span>
+                        </strong>
+                        <div>{ deviceId }</div>
+                    </div>
+                    <div className="inline margin-right">
+                        <strong>
+                            <span className="margin-right-half"><i className="fa fa-gbp" /></span>
+                            <span>Amount</span>
+                        </strong>
+                        <div>{ amount }</div>
+                    </div>
+                </div>
+            );
+        });
     }
-    // const { description, deviceId, routeId, type, zoneId } = req.body;
 
     render() {
-        console.log(this.props.balance);
         return (
             <section>
                 <h3>Taps</h3>
@@ -73,53 +100,29 @@ export class Taps extends PureComponent {
                 <div className="section-content">
                     <form className="tap-form" onSubmit={this.addTap}>
                         <div className="form-group">
-                            <label htmlFor="deviceId">Device ID</label>
-                            <input
+                            <label htmlFor="tapData">Insert taps:</label>
+                            <textarea
                                 onChange={this.handleInputChange}
-                                type="text"
-                                value={this.state.deviceId}
                                 className="form-control"
-                                id="deviceId" />
+                                rows="10"
+                                id="tapData" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="routeId">Route ID</label>
-                            <input
-                                onChange={this.handleInputChange}
-                                type="number"
-                                className="form-control"
-                                id="routeId"
-                                placeholder="1" />
+                        <div className="margin-top-double">
+                            <button
+                                disabled={this.props.tapIsRequesting}
+                                onClick={this.addTap}
+                                className={`btn btn-icon btn-${this.props.tapIsRequesting ? 'warning' : 'success'}`}
+                                type="submit">
+                                <i className={`fa fa-${this.props.tapIsRequesting ? 'spinner fa-spin' : 'plus-square'}`} />
+                                Add Taps
+                            </button>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="exampleInputPassword1">Password</label>
-                            <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
-                        </div>
-                        <div className="form-check">
-                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                            <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                        </div>
-                        <button
-                            disabled={this.props.deleteIsRequesting}
-                            onClick={this.deleteTaps}
-                            className={`btn btn-icon btn-${this.props.deleteIsRequesting ? 'warning' : 'danger'}`}
-                            type="button">
-                            <i className={`fa fa-${this.props.deleteIsRequesting ? 'spinner fa-spin' : 'trash'}`} />
-                            Delete Taps
-                        </button>
-                        <span className="margin-right" />
-                        <button
-                            disabled={this.props.tapIsRequesting}
-                            onClick={this.addTap}
-                            className={`btn btn-icon btn-${this.props.tapIsRequesting ? 'warning' : 'success'}`}
-                            type="submit">
-                            <i className={`fa fa-${this.props.tapIsRequesting ? 'spinner fa-spin' : 'plus-square'}`} />
-                            Add Tap
-                        </button>
                     </form>
                 </div>
                 <div className="section-content">
-                    <span className="balance">Balance:</span>
-                    <CodeBlock classes="wrap" content={this.props.balance.toString()} />
+                    { this.props.balance &&
+                        this.props.balance[0] &&
+                        this.props.balance[0].amount ? this.renderBalances() : 'No balance' }
                 </div>
                 <hr />
             </section>
@@ -132,8 +135,6 @@ const mapStateToProps = (state) => {
         balance: state.taps.balance,
         tapIsRequesting: state.taps.tapIsRequesting,
         tapError: state.taps.tapError,
-        deleteIsRequesting: state.taps.deleteIsRequesting,
-        deleteError: state.taps.deleteError,
     };
 };
 
