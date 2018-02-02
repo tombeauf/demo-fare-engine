@@ -13,7 +13,7 @@
 }
 
 .tap-form {
-    max-width: 500px;
+    max-width: 550px;
     margin: auto;
 
     .form-group {
@@ -28,4 +28,14 @@
         float: left;
         margin-bottom: 5px;
     }
+}
+
+.tap-info {
+    text-align: left;
+}
+
+.info-button {
+    top: 107px;
+    right: 49px;
+    position: absolute;
 }
