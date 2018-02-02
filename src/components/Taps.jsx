@@ -72,15 +72,15 @@ export class Taps extends PureComponent {
             const { deviceId, amount } = balance;
 
             return (
-                <div key={`${deviceId}-${amount}`}className="balance-block">
-                    <div className="inline margin-right-double">
+                <div key={`${deviceId}-${amount}`}className="balance-block margin-top">
+                    <div className="inline margin-right">
                         <strong className="margin-right">
                             <span className="margin-right-half"><i className="fa fa-credit-card" /></span>
                             <span>Device</span>
                         </strong>
                         <span>{ deviceId }</span>
                     </div>
-                    <div className="inline margin-right">
+                    <div className="inline margin-left">
                         <strong className="margin-right">
                             <span className="margin-right-half"><i className="fa fa-gbp" /></span>
                             <span>Amount</span>
@@ -93,6 +93,8 @@ export class Taps extends PureComponent {
     }
 
     render() {
+        const submitIconClassName = `fa fa-${this.props.tapIsRequesting ? 'spinner fa-spin' : 'plus-square'}`;
+
         return (
             <section>
                 <h3>Taps</h3>
@@ -113,7 +115,7 @@ export class Taps extends PureComponent {
                                 onClick={this.addTap}
                                 className={`btn btn-icon btn-${this.props.tapIsRequesting ? 'warning' : 'success'}`}
                                 type="submit">
-                                <i className={`fa fa-${this.props.tapIsRequesting ? 'spinner fa-spin' : 'plus-square'}`} />
+                                <i className={submitIconClassName} />
                                 Add Taps
                             </button>
                         </div>
@@ -122,7 +124,9 @@ export class Taps extends PureComponent {
                 <div className="section-content">
                     { this.props.balance &&
                         this.props.balance[0] &&
-                        this.props.balance[0].amount ? this.renderBalances() : 'No balance' }
+                        this.props.balance[0].amount ?
+                            this.renderBalances() :
+                            <div className="margin-top">No balance</div> }
                 </div>
                 <hr />
             </section>

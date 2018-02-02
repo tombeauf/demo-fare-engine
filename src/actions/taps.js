@@ -25,7 +25,12 @@ const addTap = (tapData) => {
                 dispatch(addTapReceive(balances));
             }
         }).catch((e) => {
-            dispatch(addTapError(e.message));
+            if (e.response && e.response.data &&
+                e.response.data.err) {
+                dispatch(addTapError(e.response.data.err));
+            } else {
+                dispatch(addTapError('Error adding taps'));
+            }
         });
     };
 };
