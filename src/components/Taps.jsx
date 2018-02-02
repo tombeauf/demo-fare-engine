@@ -72,20 +72,20 @@ export class Taps extends PureComponent {
             const { deviceId, amount } = balance;
 
             return (
-                <div key={`${deviceId}-${amount}`}className="margin-top balance-block">
-                    <div className="inline margin-right">
-                        <strong>
+                <div key={`${deviceId}-${amount}`}className="balance-block">
+                    <div className="inline margin-right-double">
+                        <strong className="margin-right">
                             <span className="margin-right-half"><i className="fa fa-credit-card" /></span>
                             <span>Device</span>
                         </strong>
-                        <div>{ deviceId }</div>
+                        <span>{ deviceId }</span>
                     </div>
                     <div className="inline margin-right">
-                        <strong>
+                        <strong className="margin-right">
                             <span className="margin-right-half"><i className="fa fa-gbp" /></span>
                             <span>Amount</span>
                         </strong>
-                        <div>{ amount }</div>
+                        <span>{ parseFloat(amount).toFixed(2) }</span>
                     </div>
                 </div>
             );

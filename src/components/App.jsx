@@ -9,7 +9,6 @@ const App = props => (
         <Notifications />
         <Header />
         { props.children }
-        <span className="tagline">Made with ❤️ by OTRL</span>
     </div>
 );
 

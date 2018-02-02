@@ -25,7 +25,6 @@ const addTap = (tapData) => {
                 dispatch(addTapReceive(balances));
             }
         }).catch((e) => {
-            console.log('made it', e);
             dispatch(addTapError(e.message));
         });
     };
