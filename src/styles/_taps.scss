@@ -11,3 +11,14 @@
     font-size: 20px;
     margin-right: 10px;
 }
+
+.tap-form {
+    max-width: 500px;
+    margin: auto;
+
+    .form-group {
+        label {
+            float: left;
+        }
+    }
+}

@@ -59,6 +59,22 @@ body, html {
     min-width: auto;
 }
 
+.margin-top {
+    margin-top: 10px;
+}
+
+.margin-right {
+    margin-right: 10px;
+}
+
+.margin-bottom {
+    margin-bottom: 10px;
+}
+
+.margin-left {
+    margin-left: 10px;
+}
+
 @media only screen and (max-width : $mobile) {
     .app {
         section {

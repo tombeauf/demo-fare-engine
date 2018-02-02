@@ -24,13 +24,13 @@
             margin-left: 10px;
             font-family: 'Montserrat', Helvetica;
             display:inline-block;
-            vertical-align: 3px;
+            vertical-align: 7px;
         }
 
         a {
             i {
                 color: #d9534f;
-                font-size: 35px;
+                font-size: 40px;
             }
         }
     }
@@ -43,6 +43,16 @@
         .brand-logo {
             height: 60px;
             font-size: 18px;
+
+            span {
+                vertical-align: 4px;
+            }
+
+            a {
+                i {
+                    font-size: 30px;
+                }
+            }
         }
     }
 }

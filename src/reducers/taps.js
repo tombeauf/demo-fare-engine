@@ -4,7 +4,9 @@ import * as types from '../constants/ActionTypes';
 const defaultNumbersState = {
     balance: 0,
     tapIsRequesting: false,
-    tapError: false,
+    tapError: null,
+    deleteIsRequesting: false,
+    deleteError: null,
 };
 
 function numbers(state = defaultNumbersState, action) {
@@ -18,13 +20,31 @@ function numbers(state = defaultNumbersState, action) {
     case types.TAP_REQUEST:
         return newState(state, {
             tapIsRequesting: true,
-            tapError: false,
+            tapError: null,
         });
 
     case types.TAP_ERROR:
         return newState(state, {
-            tapError: true,
+            tapError: action.err,
             tapIsRequesting: false,
+        });
+
+    case types.DELETE_TAPS_REQUEST:
+        return newState(state, {
+            deleteIsRequesting: true,
+            deleteError: null,
+        });
+
+    case types.DELETE_TAPS_ERROR:
+        return newState(state, {
+            deleteError: action.err,
+            deleteIsRequesting: false,
+        });
+
+    case types.DELETE_TAPS_RECEIVE:
+        return newState(state, {
+            deleteError: null,
+            deleteIsRequesting: false,
         });
 
     default:
