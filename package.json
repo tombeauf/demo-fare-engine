@@ -52,6 +52,7 @@
     "bootstrap": "^3.3.5",
     "classnames": "^2.2.0",
     "html-webpack-plugin": "^2.28.0",
+    "lodash": "^4.17.5",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.5",
