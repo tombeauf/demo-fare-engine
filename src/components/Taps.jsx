@@ -653,17 +653,17 @@ export class Taps extends PureComponent {
         })).isRequired,
         tapIsRequesting: PropTypes.bool.isRequired,
         tapError: PropTypes.string,
-    }
+    };
 
     static defaultProps = {
         tapError: null,
         deleteError: null,
-    }
+    };
 
     state = {
         infoShown: false,
         tapData: '',
-    }
+    };
 
     componentWillReceiveProps(newProps) {
         if (!this.props.tapError && newProps.tapError) {
@@ -684,15 +684,11 @@ export class Taps extends PureComponent {
                 </div>
             );
         });
-    }
-
-    toggleInfo = () => {
-        this.setState({ infoShown: !this.state.infoShown });
-    }
+    };
 
     handleInputChange = (e) => {
         this.setState({ [e.target.id]: e.target.value });
-    }
+    };
 
     addTap = (e) => {
         let jsonTapData = '';
@@ -716,33 +712,70 @@ export class Taps extends PureComponent {
         }
 
         this.props.dispatch(addTap(jsonTapData));
-    }
+    };
 
     handleSelectChange = (e) => {
         this.setState({ tapData: e.target.value });
+    };
+
+    recursiveZoneAmountRender (zoneAmount) {
+        const savings = parseFloat(zoneAmount.nominalPrice - zoneAmount.adjustedPrice).toFixed(2);
+        const hasSavings = zoneAmount.nominalPrice !== zoneAmount.adjustedPrice;
+
+        return (
+            <div className={ hasSavings ? 'panel panel-default' : '' } key={_.uniqueId()}>
+                { zoneAmount.nominalPrice !== zoneAmount.adjustedPrice
+                    && <div className="panel-heading">{ zoneAmount.zoneName } cap (£{ zoneAmount.zoneCap }) applied: you saved £{savings }</div>
+                }
+                <div className={ hasSavings ? 'panel-body' : '' }>
+                    { _.map(zoneAmount.trips, trip => this.tripRender(trip)) }
+                    { _.map(zoneAmount.subAmounts, amount => this.recursiveZoneAmountRender(amount)) }
+                </div>
+            </div>
+        );
+    }
+
+    tripRender (trip) {
+        return (
+            <div className="panel panel-default" key={_.uniqueId()}>
+                <div className="panel-heading">
+                    <b>{ trip.journeys.length > 1 ? 'Return' : 'Single' }</b> Nominal cost: £{ trip.price }
+                </div>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th width="50%"><b>From</b></th>
+                        <th><b>To</b></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    { _.map(trip.journeys, (journey) => {
+                        return (
+                            <tr key={_.uniqueId()}>
+                                <td>{journey.origin}</td>
+                                <td>{journey.destination}</td>
+                            </tr>
+                        );
+                    }) }
+                    </tbody>
+                </table>
+            </div>
+        );
     }
 
     renderBalances = () => {
         return this.props.balance.map((balance) => {
-            const { deviceId, amount } = balance;
-
+            const { deviceId, zoneAmounts, amount } = balance;
             return (
-                <div className="text-center well well-sm">
-                    <strong className="margin-right">
-                        <span className="margin-right-half"><i className="fa fa-credit-card" /></span>
-                        <span>Device</span>
-                    </strong>
-                    <span>{ deviceId }</span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <strong className="margin-right">
-                        <span className="margin-right-half"><i className="fa fa-gbp" /></span>
-                        <span>Amount</span>
-                    </strong>
-                    <span>{ parseFloat(amount).toFixed(2) }</span>
+                <div className="panel panel-default" key={deviceId}>
+                    <div className="panel-heading"><span className="pull-right">Total: £{ amount }</span><i className="fa fa-credit-card" /> Device { deviceId } </div>
+                    <div className="panel-body">
+                        { _.map(zoneAmounts, zoneAmount => this.recursiveZoneAmountRender(zoneAmount)) }
+                    </div>
                 </div>
             );
         });
-    }
+    };
 
     render() {
         const submitIconClassName = `fa fa-${this.props.tapIsRequesting ? 'spinner fa-spin' : 'plus-square'}`;
@@ -790,9 +823,7 @@ export class Taps extends PureComponent {
                                 <div className="alert alert-info tap-info">
                                     { this.getTapInfoText() }
                                 </div>
-                                { this.props.balance &&
-                                    this.props.balance[0] &&
-                                    this.props.balance[0].amount ?
+                                { this.props.balance.length ?
                                         this.renderBalances() :
                                         <div>No balance</div> }
                             </Col>

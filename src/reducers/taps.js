@@ -2,7 +2,7 @@ import newState from '../helpers/reducer';
 import * as types from '../constants/ActionTypes';
 
 const defaultNumbersState = {
-    balance: [{}],
+    balance: [],
     tapIsRequesting: false,
     tapError: null,
 };
