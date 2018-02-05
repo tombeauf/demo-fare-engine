@@ -8,8 +8,6 @@ body, html {
 }
 
 .app {
-    text-align: center;
-
     section {
         background-color: white;
         min-height: 400px;
@@ -25,6 +23,11 @@ body, html {
             margin-left: 0;
             margin-right: 0;
             padding: 10px;
+
+            h3 {
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
 
             .section-content-header {
                 font-size: 16px;

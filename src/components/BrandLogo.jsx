@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const BrandLogo = () => (
     <div className="brand-logo">
         <Link className="no-dec" to="/">
-            <i className="fa fa-ticket" />
+            <img alt="logo" src="../icons/logo.svg" />
             <span>Fare Engine</span>
         </Link>
     </div>

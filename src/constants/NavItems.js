@@ -1,9 +1,9 @@
 const NAV_ITEMS = [
-    {
-        label: 'Taps',
-        path: 'taps',
-        icon: 'credit-card',
-    },
+    // {
+    //     label: 'Taps',
+    //     path: 'taps',
+    //     icon: 'credit-card',
+    // },
     // {
     //     label: 'Numbers',
     //     path: 'numbers',
